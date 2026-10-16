@@ -1,109 +1,114 @@
-# MEMO QUYẾT ĐỊNH ÁP DỤNG AI (AI ADOPTION DECISION MEMO)
+# MEMO QUYẾT ĐỊNH ÁP DỤNG AI
 
-**Kính gửi:** Ban Điều Hành & Trưởng Khối Vận Hành  
-**Đồng kính gửi:** Ban Công Nghệ & Quản Trị Rủi Ro  
-**Dự án:** Trợ lý AI Tra cứu Quy trình & Chính sách Nội bộ (Internal Knowledge AI Assistant)  
-**Nhóm thực hiện:** Promt Kiếm Tông (`Day26_Track01_Promt_Kiem_Tong`)  
-**Thành viên dự án:**  
-1. **Trần Đình Hinh** (`2A202602399`) - Trưởng nhóm / Phụ trách Chẩn đoán Gartner-Lite & Mollick  
-2. **Hoàng Quốc Dũng** (`2A202602523`) - Phụ trách Quy trình TO-BE & Lộ trình 30-60-90  
-3. **Đinh Xuân Quyền** (`2A202602358`) - Phụ trách ADKAR & Dashboard Hành Động  
-**Ngày lập memo:** 14/10/2026 | **Phiên bản:** v2.0 (Sau phản biện chéo)  
+**Dự án:** Trợ lý AI tra cứu quy trình & chính sách nội bộ<br>
+**Nhóm:** Promt Kiếm Tông (`Day26_Track01_Promt_Kiem_Tong`)<br>
+**Thành viên:** Trần Đình Hinh (`2A202602399`), Hoàng Quốc Dũng (`2A202602523`), Đinh Xuân Quyền (`2A202602358`)<br>
+**Ngày bài nhóm:** 14/10/2026 · **Rà soát theo Yeucau.md:** 16/10/2026 · **Phiên bản:** v2 hiệu chỉnh
 
----
+## 1. Vấn đề và nguyên nhân gốc
 
-### 1. Vấn đề và Nguyên nhân gốc
+Theo mô tả của nhóm, trợ lý đã được cấp tài khoản cho 25 chuyên viên Vận hành & Hỗ trợ khách hàng nhưng nhân viên vẫn tìm file/hỏi đồng nghiệp. Cấp tài khoản là **deployment**; quay lại dùng là **usage**. **Adoption** đòi hỏi thay đổi workflow, trách nhiệm, kiểm soát, hành vi và đo lường. Chưa đủ bằng chứng kết luận tỷ lệ adoption.
 
-#### 1.1. Hiện trạng vấn đề
-Sau 4 tuần triển khai cấp phát tài khoản (*Deployment*) cho 25 chuyên viên thuộc Phòng Vận hành & Hỗ trợ Khách hàng, hệ thống ghi nhận tỷ lệ ứng dụng thực tế (*Adoption*) chỉ đạt **18%**. Nhân viên có xu hướng bỏ rơi công cụ và quay lại quy trình truyền thống: tìm kiếm file Word/PDF thủ công trên các thư mục dùng chung hoặc trực tiếp hỏi đồng nghiệp thâm niên. Thời gian trung bình để xử lý 1 yêu cầu tra cứu chính sách phức tạp vẫn ở mức cao: **8.5 phút/lượt**, gây nghẽn tiến độ hỗ trợ khách hàng.
+| Phạm vi: ba quy trình liên kết | Đầu vào → đầu ra | Owner kết quả |
+| :--- | :--- | :--- |
+| Tra cứu và kiểm chứng chính sách | Câu hỏi → điều khoản còn hiệu lực đã kiểm chứng | Chuyên viên vận hành |
+| Xử lý yêu cầu và ngoại lệ | Kết quả kiểm chứng/ca chưa đủ căn cứ → phản hồi được duyệt/ticket chuyên viên chính | Chủ quy trình Vận hành; chuyên viên chính nhận ngoại lệ |
+| Báo lỗi và cập nhật tài liệu | Báo lỗi/văn bản mới → phiên bản được duyệt, kiểm tra lại, đóng phản hồi | Data Owner; QA xác nhận bản sửa |
 
-#### 1.2. Nguyên nhân gốc rễ (Root Cause)
-Ban đầu, nhóm quản lý dự án cho rằng nhân viên "chưa quen dùng công nghệ" hoặc "thiếu kỹ năng đặt câu hỏi (prompt engineering)" và dự kiến mở thêm các lớp đào tạo. Tuy nhiên, qua quá trình điều tra thực tế, nguyên nhân gốc hoàn toàn không nằm ở kỹ năng, mà gồm 2 điểm cốt lõi:
-1. **Thiếu Kiến trúc Tin cậy (Lack of Trust Architecture):** Hệ thống AI đưa ra các đoạn văn bản tổng hợp nhưng **hoàn toàn không có trích dẫn nguồn** (không có link văn bản, không có số điều khoản và không ghi rõ ngày ban hành).
-2. **Quy trình chưa xác định ranh giới trách nhiệm & Cơ chế chuyển giao:** Quy chế vận hành chưa xác định ai là người chịu trách nhiệm khi AI trích xuất sai lệch; chưa có quy trình xử lý khi AI gặp câu hỏi mơ hồ hoặc tài liệu bị mâu thuẫn.
+Hai nguyên nhân gốc **dự kiến**, cần kiểm tra trên hiện trạng:
 
----
+1. **Nguồn thiếu quản trị/kiểm chứng:** thiếu owner, hiệu lực, kiểm tra trích nguồn và vòng phản hồi (Gartner-Lite: Readiness, Absorption).
+2. **Workflow chưa rõ trách nhiệm và bàn giao:** nhân viên ngại dùng vì chưa biết ai kiểm/nhận ca lỗi (Mollick; ADKAR: Desire). Chưa đủ căn cứ khẳng định Awareness/Knowledge đã đạt hoặc đào tạo hoàn toàn vô ích.
 
-### 2. Framework đã dùng và Bằng chứng thực tế
+## 2. Framework và bằng chứng
 
-Để đi đến kết luận trên một cách khoa học, nhóm Promt Kiếm Tông đã áp dụng kết hợp 3 framework chuẩn quốc tế:
+Gartner-Lite là **khung rút gọn của bài lab**, không phải mô hình chuẩn quốc tế độc lập. Ba cách nhìn cùng dẫn tới giải pháp: quản trị nguồn → người kiểm và bàn giao → giảm trở ngại sử dụng → phản hồi và đo kết quả.
 
-#### 2.1. Phân tích Gartner-Lite (Đánh giá mức độ sẵn sàng tổ chức)
-- **Direction (Hướng đi):** **ĐẠT**. Mục tiêu rõ ràng: rút ngắn thời gian xử lý nghiệp vụ, giảm tải cho nhân sự cấp cao.
-- **Readiness (Mức sẵn sàng):** **THIẾU NGHIÊM TRỌNG**. Kho dữ liệu nội bộ bị phân mảnh, có nhiều văn bản đã hết hiệu lực nhưng vẫn nằm trong kho dữ liệu nạp vào AI. Chưa có vai trò **Data Owner** chịu trách nhiệm thẩm định và cập nhật văn bản định kỳ.
-- **Absorption (Khả năng hấp thụ & duy trì):** **THIẾU**. Chưa có cơ chế tiếp nhận phản hồi lỗi từ người dùng cuối, chưa có kênh hỗ trợ kỹ thuật tại chỗ khi AI đưa câu trả lời sai.
+| Framework | Nhận định cần kiểm tra | Kiểm tra / giải pháp |
+| :--- | :--- | :--- |
+| Gartner-Lite — Direction | Mục tiêu giảm công sức tra cứu, baseline chưa xác nhận | Chủ quy trình xác nhận tác vụ, nguồn đo và mục tiêu ở Gate 30. |
+| Gartner-Lite — Readiness | Bài nhóm mô tả tài liệu phân mảnh, thiếu Data Owner | Kiểm kê phiên bản/hiệu lực, quyền truy cập, ngân sách và người hỗ trợ; chỉ nạp nguồn được duyệt. |
+| Gartner-Lite — Absorption | Bài nhóm mô tả thiếu phản hồi và hỗ trợ | Bổ nhiệm owner vận hành, hàng đợi hỗ trợ và lịch rà soát lỗi hằng tuần. |
+| Mollick | Người duyệt và điểm bàn giao chưa rõ | AI tìm/tóm tắt; người kiểm nguồn, duyệt kết quả/ngoại lệ. Chỉ tự động tạo/định tuyến ticket rủi ro thấp, có log, kiểm thử và đường xử lý lỗi. |
+| ADKAR | Desire có thể nghẽn vì thiếu tin cậy; các yếu tố khác chưa đo | Phỏng vấn đủ 5 yếu tố; bổ sung hướng dẫn khi nên/không nên dùng, thực hành có hỗ trợ và phản hồi. Đào tạo riêng lẻ chưa đủ. |
 
-#### 2.2. Phân tích Mollick Model (Phân chia công việc Người – AI)
-- Đã phân lập rõ ràng 3 vùng công việc:
-  - **Người giữ quyền (Human in Charge):** Chuyên viên vận hành là người duy nhất có quyền duyệt nội dung và chịu trách nhiệm pháp lý khi gửi thông tin cho khách hàng. AI tuyệt đối không tự động gửi email/chat trực tiếp tới khách hàng.
-  - **AI hỗ trợ (AI Assist):** AI làm nhiệm vụ đọc lướt, trích xuất điều khoản và tóm tắt nội dung chính sách kèm trích dẫn văn bản gốc.
-  - **AI tự động (Automated):** Tạm thời chưa áp dụng vùng này cho tới khi độ chính xác của mô hình đạt trên 99%.
+**Bằng chứng tham khảo đã kiểm tra:** [OpenAI — Morgan Stanley uses AI evals to shape the future of financial services](https://openai.com/index/morgan-stanley/) (truy cập 16/10/2026) mô tả đánh giá trước triển khai, chuyên gia chấm câu trả lời, QA hồi quy và người kiểm đầu ra. Suy luận áp dụng: cần kiểm thử nguồn và cơ chế người kiểm trước mở rộng. Case này hỗ trợ thiết kế cho cả hai giả thuyết; không xác nhận hiện trạng của nhóm hoặc chứng minh riêng trích nguồn gây ra adoption.
 
-#### 2.3. Phân tích ADKAR (Điểm nghẽn tâm lý hành vi)
-- Nhân viên có nhận thức tốt (*Awareness*) và biết cách gõ câu hỏi (*Knowledge*). Tuy nhiên, điểm nghẽn chí mạng nằm ở **Desire (Mong muốn/Động lực áp dụng)**.
-- Trong nghiệp vụ ngân hàng/vận hành, tư vấn sai chính sách dẫn tới phạt chế tài nặng nề. Do AI không hiện nguồn kiểm chứng, nhân viên sợ rủi ro nên từ chối sử dụng. Mở lớp đào tạo sẽ hoàn toàn vô ích nếu không giải quyết được vấn đề trích dẫn nguồn.
+**Bằng chứng nội bộ:** nhóm xác nhận chưa có bằng chứng kèm theo khi rà soát. Những giá trị sau chỉ truy vết bản nhóm, **chưa được coi là kết quả đã đo**:
 
-#### 2.4. Bằng chứng thực nghiệm
-- **Log hệ thống:** Trong 450 phiên truy vấn tuần qua, 65% trường hợp nhân viên không bấm sao chép kết quả của AI mà tiếp tục mở đồng thời thư mục nội bộ để tự kiểm tra lại.
-- **Phỏng vấn định tính:** 10/10 chuyên viên được hỏi đều trả lời: *"Chúng tôi sẵn sàng dùng AI nếu hệ thống chỉ rõ câu này trích từ Quyết định số mấy, Điều nào. Nếu không có nguồn, chúng tôi bắt buộc phải đọc lại văn bản gốc để tự bảo vệ mình."*
-- **Tham chiếu quốc tế:** Bài học từ Morgan Stanley (2023) chứng minh rằng việc triển khai AI thành công cho hàng nghìn cố vấn tài chính phụ thuộc hoàn toàn vào cơ chế "Verifiable Citations" (Trích dẫn có thể kiểm chứng).
+| Nội dung bản nhóm | Vấn đề đối chiếu | Cần bổ sung / điều phối |
+| :--- | :--- | :--- |
+| Pilot 25 người; quay lại 18% | README: sau 2 tuần; memo: sau 4 tuần; Excel: tuần 1. 18% không tương ứng số nguyên người trên mẫu 25 | Trần Đình Hinh xác nhận tình huống thực tế, kỳ đo, định nghĩa quay lại, tử số/mẫu số; không tự suy ra số người. |
+| 8,5 phút; thành công không hỏi lại 22%; trích nguồn/bàn giao 0% | Thiếu tập đo, thời điểm và định nghĩa; thiếu dữ liệu không đồng nghĩa 0% | Đinh Xuân Quyền tổng hợp log tác vụ; Hoàng Quốc Dũng cùng QA lập mẫu và khóa baseline. |
+| 65% bỏ dở; 450 phiên; phỏng vấn 10/10 | README: 30 ngày, không sao chép/đánh giá; memo: tuần qua, mở thư mục. Hai cách đo khác nhau | Bổ sung thống kê đã ẩn danh, ngày đo, mẫu, tiêu chí và ghi nhận phỏng vấn. Chưa dùng các câu trích dẫn cũ như lời nói đã xác thực. |
+| Góp ý qua lại với Nhóm 05 | Có mô tả trong bài, chưa có biên bản; góp ý đưa đi không thay cho góp ý nhận về | Nhóm trưởng xác nhận nhóm phản biện và ≥2 góp ý nhận được; đối chiếu v1 → v2. |
 
----
+§3.1 của yêu cầu không cho dùng case tưởng tượng. Nhóm cần xác nhận tình huống từ lớp/doanh nghiệp và ghi nhận có thể truy vết. Không tự thêm tên doanh nghiệp, log hay phỏng vấn; chỉ công khai tổng hợp đã ẩn danh, không đưa dữ liệu nội bộ nhạy cảm lên repo.
 
-### 3. Ít nhất 02 thay đổi cụ thể sau phản biện chéo (từ Nhóm 05)
+## 3. Thay đổi sau phản biện: đối chiếu v1 → v2
 
-Sau phiên kiểm tra chéo ở Chặng 3 với Nhóm 05, nhóm Promt Kiếm Tông đã tiếp thu và thực hiện 2 thay đổi mang tính quyết định trong bản thiết kế v2:
+Giữ nguyên `v1/dashboard_hanh_dong_v1.xlsx`. Góp ý Nhóm 05 dưới đây theo bản nhóm ghi, cần xác nhận bằng biên bản; nội dung hai file có thể đối chiếu trực tiếp.
 
-| Hạng mục | Bản v1 (Trước phản biện) | Bản v2 (Sau phản biện chéo) | Rationale (Lý do thay đổi) |
+| Hạng mục | V1 thực tế | V2 hiệu chỉnh | Góp ý ghi trong bản nhóm |
 | :--- | :--- | :--- | :--- |
-| **Thay đổi 1: Hệ thống chỉ số đo lường** | Sử dụng chỉ số *"Số lượng prompt/câu hỏi gửi lên AI mỗi ngày"* (Tầng 1 - Activity Metric). | **Loại bỏ chỉ số prompt ảo.** Thay bằng: *"Tỷ lệ câu trả lời có trích dẫn văn bản và điều khoản chính xác ≥ 95%"* (Tầng 4 - Quality Metric) và *"Tỷ lệ tra cứu thành công không cần hỏi lại đồng nghiệp ≥ 80%"* (Tầng 2 - Behavior Metric). | Nhóm 05 chỉ ra rằng số lượng câu hỏi cao có thể do người dùng hỏi đi hỏi lại vì AI trả lời sai/không đúng ý. Đo lường trích nguồn và tỷ lệ không cần làm lại mới phản ánh đúng chất lượng và giá trị thực tế. |
-| **Thay đổi 2: Cơ chế Governance & Kiến trúc tin cậy** | Chỉ nêu chung chung "cần cập nhật tài liệu thường xuyên" và chưa có quy trình khi AI không chắc chắn. | **Bổ sung vai trò Data Owner chính thức** phụ trách dán nhãn hiệu lực văn bản hàng tuần; thiết lập **Cơ chế Handoff tự động**: Khi độ tin cậy < 85%, AI tự động hiển thị cảnh báo và chuyển ticket về Chuyên viên chính kèm tóm tắt ngữ cảnh. | Khắc phục triệt để lỗ hổng về Governance của Gartner-Lite, tạo điểm tựa an toàn cho nhân viên giải tỏa điểm nghẽn Desire trong ADKAR. |
+| Chất lượng thay cho activity | Số prompt/ngày, tỷ lệ Like | Bỏ hai chỉ số này; thêm trích nguồn đúng và hoàn tất không hỏi lại/không phải sửa | Prompt cao không chứng minh chất lượng; Like là cảm nhận. |
+| Rủi ro và bàn giao | Chưa có chỉ số handoff | Ca cần chuyển có ticket đủ ngữ cảnh, đúng người nhận, có SLA | Cần điểm bàn giao khi thiếu nguồn/câu hỏi phức tạp. |
+| Nguồn đo năng suất | Thời gian tự khai, giờ tiết kiệm lý thuyết | Log riêng bước tra cứu; giờ tiết kiệm ròng sau QA/làm lại/hỗ trợ | Nguồn đo phải kiểm tra được. |
+| Ownership và hành động | Nhắc dùng, hướng dẫn, họp xem xét | Data Owner, QA, SLA 24/48 giờ, điều kiện sửa/dừng | Hành động phải có owner và thời hạn. |
 
----
+Lần rà soát này còn thống nhất số liệu/mục tiêu giữa các file, bổ sung công thức và bỏ ngưỡng “85% confidence”, “99% accuracy thì được tự động” chưa được kiểm định. Không gán các sửa bổ sung này thành góp ý thực tế của Nhóm 05.
 
-### 4. Quyết định cuối cùng
+## 4. Quyết định
 
-👉 **PHÁN QUYẾT: SỬA (PIVOT / FIX READINESS & GOVERNANCE TRƯỚC KHI ROLLOUT)**
+**SỬA — giữ phạm vi pilot theo bài nhóm, xác minh hiện trạng và hoàn thiện nguồn/kiểm soát trước mở rộng.** Đây là đề xuất thiết kế, chưa phải kết quả triển khai được xác nhận.
 
-- **Không chọn "TIẾP TỤC (Scale)":** Vì nếu vội vàng mở rộng cấp tài khoản cho 200 nhân viên toàn khối trong khi kho dữ liệu chưa có Data Owner và tính năng trích nguồn chưa bật, công ty sẽ lãng phí ngân sách license và tạo ra làn sóng bài xích công nghệ do thông tin sai lệch.
-- **Không chọn "DỪNG (Kill)":** Vì bài toán tiết kiệm thời gian tra cứu từ 8.5 phút xuống 3.0 phút là hoàn toàn khả thi và có ROI vượt trội (tiết kiệm trên 120 giờ công/tháng cho chỉ riêng 25 nhân sự).
-- **Lựa chọn "SỬA":** Giữ nguyên quy mô pilot 25 người trong 30 ngày tiếp theo để hoàn thiện tính năng trích dẫn nguồn, bổ nhiệm Data Owner làm sạch kho tài liệu và kiểm thử lại theo bộ chỉ số Dashboard v2.
+Chưa có baseline, chất lượng và giá trị được kiểm chứng để quyết định mở rộng. 120 giờ/tháng là **mục tiêu đề xuất**, chưa phải kết quả hay bằng chứng ROI. Không suy ra normalization từ tỷ lệ dùng hoặc onboarding.
 
----
+- **Tiếp tục:** đồng thời đủ bằng chứng và đạt mọi điều kiện gate kế tiếp.
+- **Sửa:** thiếu dữ liệu hoặc bất kỳ mục tiêu/nguồn lực nào; ghi owner và hạn xử lý, đo lại. Hết 30/60/90 ngày không tự qua gate.
+- **Tạm dừng luồng bị ảnh hưởng ngay:** lộ dữ liệu/sai quyền hoặc sai chính sách nghiêm trọng; Chủ quy trình phối hợp Data Owner/AI Tech Lead xử lý, QA thử lại trước khi mở.
+- **Đề xuất dừng pilot:** không thể khắc phục quyền/nguồn lực, hoặc giờ tiết kiệm ròng ≤0 trong 4 tuần đủ mẫu sau một vòng sửa; Chủ quy trình trình người có thẩm quyền quyết định. Không dùng login để bù cho chất lượng/giá trị không đạt.
 
-### 5. Kế hoạch hành động 30–60–90 ngày & Phân công trách nhiệm (Owners)
+## 5. Lý do, bước tiếp theo và owner
 
-```mermaid
-flowchart TD
-    G1["GATE 1 (0-30 NGÀY)<br/>Chứng minh Tính sẵn sàng & Nguồn kiểm chứng"] -->|Đạt Trích nguồn >=95%| G2["GATE 2 (31-60 NGÀY)<br/>Chứng minh Năng suất & Chất lượng vận hành"]
-    G2 -->|Đạt Thời gian <=3 phút & Giảm làm lại| G3["GATE 3 (61-90 NGÀY)<br/>Quyết định Mở rộng toàn khối (Scale-up)"]
-    G1 -.->|Không đạt| P1["Họp rà soát kiến trúc RAG / Tạm dừng"]
-    G2 -.->|Không đạt| P2["Cải tiến quy trình / Đánh giá lại ROI"]
-```
+### AS-IS / TO-BE và kiến trúc tin cậy
 
-#### 5.1. Gate 1: 0 – 30 ngày (Chứng minh Tính sẵn sàng & Nguồn trích dẫn)
-- **Mục tiêu:** Xử lý triệt để nguyên nhân gốc về dữ liệu và độ tin cậy.
-- **Hành động cụ thể:**
-  1. *Kỹ thuật:* Bật tính năng trích dẫn nguồn (Citation) hiển thị kèm mỗi câu trả lời (Link văn bản, Điều, Khoản, Ngày cập nhật). *(Owner: AI Tech Lead - Hoàng Quốc Dũng)*.
-  2. *Dữ liệu:* Ban hành danh mục 120 văn bản quy trình chuẩn hóa; phân công 01 chuyên viên làm Data Owner chịu trách nhiệm cập nhật văn bản mới vào thứ Sáu hàng tuần. *(Owner: Trưởng phòng Quy trình Vận hành)*.
-  3. *Quy chế:* Ban hành hướng dẫn trách nhiệm kiểm chứng (Mollick TO-BE workflow) cho 25 nhân viên pilot. *(Owner: Trưởng phòng Vận hành - Trần Đình Hinh)*.
-- **Điều kiện mở Gate 1:** Tỷ lệ câu trả lời có trích dẫn nguồn đạt ≥ 95% trên mẫu kiểm tra 100 câu hỏi.
+| Bước | AS-IS theo mô tả nhóm | TO-BE đề xuất | Owner / bàn giao |
+| :--- | :--- | :--- | :--- |
+| Tra cứu | Tìm nhiều file/hỏi người có kinh nghiệm | Ghi mã tác vụ và thời gian; AI chỉ tìm nguồn được phép | Chuyên viên vận hành; AI hỗ trợ |
+| Kiểm chứng | Khó biết bản còn hiệu lực | Link, điều khoản, hiệu lực/phiên bản; người mở nguồn đối chiếu | Chuyên viên giữ quyền duyệt; mâu thuẫn chuyển chuyên viên chính |
+| Dùng / chuyển | Chưa rõ trách nhiệm và đường chuyển | Chỉ gửi nội dung đã duyệt; thiếu/mâu thuẫn/hết hiệu lực nguồn, ngoài phạm vi hoặc nghi sai → ticket có câu hỏi, nguồn và lý do | Chuyên viên chính nhận trong 4 giờ làm việc; quá hạn báo Chủ quy trình |
+| Phản hồi | Thiếu vòng phản hồi rõ | Ghi lỗi → Data Owner duyệt bản sửa → AI Tech Lead cập nhật → QA kiểm lại → báo người gửi | Không tự nạp phản hồi thành tri thức khi chưa duyệt |
 
-#### 5.2. Gate 2: 31 – 60 ngày (Chứng minh Chất lượng & Năng suất)
-- **Mục tiêu:** Đo lường sự thay đổi hành vi và năng suất làm việc của nhân viên.
-- **Hành động cụ thể:**
-  1. Theo dõi thời gian xử lý tra cứu ticket qua log hệ thống (kỳ vọng giảm từ 8.5 phút xuống ≤ 4.0 phút).
-  2. Triển khai nút "Báo lỗi 1-Click" và cơ chế chuyển giao chuyên viên khi AI không chắc chắn. *(Owner: Đinh Xuân Quyền)*.
-  3. QA audit ngẫu nhiên 10% các phiên tra cứu để đảm bảo không có câu trả lời sai lệch chính sách nghiêm trọng. *(Owner: Trưởng nhóm QA)*.
-- **Điều kiện mở Gate 2:** Tỷ lệ tra cứu không cần hỏi lại đồng nghiệp đạt ≥ 80%; thời gian xử lý trung bình đạt ≤ 3.5 phút.
+Chuỗi: **Nguồn → Trích nguồn → QA mẫu → Chuyển người → Phản hồi**. Người dùng kiểm 100% kết quả trước khi dùng. QA độc lập lấy ngẫu nhiên ≥50 câu trả lời/tuần (ít hơn thì kiểm toàn bộ), đồng thời kiểm riêng toàn bộ ca lỗi/chuyển giao. Không trộn ca rủi ro được chọn thêm vào mẫu ngẫu nhiên tính tỷ lệ trích nguồn. QA rà cả ca không chuyển để phát hiện bỏ sót.
 
-#### 5.3. Gate 3: 61 – 90 ngày (Quyết định Mở rộng toàn diện - Normalization)
-- **Mục tiêu:** Hoàn thiện bài toán kinh tế (Business Case) và chuẩn bị nhân rộng.
-- **Hành động cụ thể:**
-  1. Tổng kết số giờ lao động tiết kiệm được (kỳ vọng ≥ 120 giờ/tháng cho nhóm pilot).
-  2. Trình Ban Giám Đốc phê duyệt ngân sách mở rộng cấp tài khoản cho 200 nhân viên thuộc toàn bộ khối Vận hành và các chi nhánh.
-  3. Chuyển giao quy chế vận hành cho Phòng Nhân sự & Đào tạo để đưa AI vào chương trình Onboarding nhân viên mới (Đạt trạng thái *Normalization*). *(Owner: Ban Điều Hành & Trưởng Khối Vận Hành)*.
-- **Điều kiện mở Gate 3:** Tỷ lệ nhân viên tự nguyện sử dụng hàng tuần đạt ≥ 85%, tỷ lệ hài lòng nội bộ đạt ≥ 4.5/5.0.
+Điều kiện dùng AI: tài liệu trong phạm vi, có quyền truy cập và còn hiệu lực; AI không tự gửi khách hàng. Chuyển người theo dấu hiệu kiểm tra được và phản ánh người dùng; không dựa vào điểm tự tin do mô hình tự khai.
 
----
-*Memo được lập và chịu trách nhiệm bởi Nhóm Promt Kiếm Tông (Day26_Track01_Promt_Kiem_Tong).*
+Readiness: Data Owner duyệt trước nạp, kiểm hiệu lực thứ Sáu hằng tuần và khi có thay đổi; sửa khẩn trong 24 giờ làm việc hoặc khóa nguồn bị ảnh hưởng. Thử quyền theo vai trò và khả năng thu hồi quyền. Chủ quy trình chốt người hỗ trợ, hạn mức chi phí và nơi lưu log; chưa duyệt thì chưa qua Gate 30. Chưa có căn cứ ấn định 120 văn bản hoặc mở rộng cho 200 người.
+
+### Định nghĩa chỉ số và giá trị
+
+[Dashboard v2](../dashboard/dashboard_hanh_dong_v2.xlsx) có 6 chỉ số ở 5 tầng; sheet “Định nghĩa đo” ghi công thức, mẫu, kỳ đo và xử lý thiếu dữ liệu. Tất cả baseline chờ xác minh; mục tiêu đề xuất cần Chủ quy trình xác nhận ở Gate 30.
+
+| Chỉ số | Công thức / nguồn | Mục tiêu |
+| :--- | :--- | :--- |
+| Mức dùng trong workflow | Người có ≥1 tác vụ AI gắn ticket / người có tác vụ đủ điều kiện trong tuần; log tác vụ + lịch phân công | ≥85% ở Gate 60/90; chỉ phản ánh usage |
+| Hành vi | Tác vụ AI đã duyệt, không hỏi thêm/không phải sửa trong 2 ngày làm việc / toàn bộ tác vụ AI đủ thời gian theo dõi; log + khảo sát đối chiếu | ≥80% ở Gate 60/90 |
+| Năng suất | Trung bình phút lao động chủ động của mọi người từ bắt đầu tra cứu đến kết quả được duyệt, cộng các lượt chuyển/làm lại trong 2 ngày; log từng đoạn | ≤3,0 phút ở Gate 60/90; không dùng thời gian toàn bộ ticket |
+| Trích nguồn (product) | Câu trả lời đúng nội dung/điều khoản, link có quyền mở, nguồn còn hiệu lực / câu trả lời chính sách trong mẫu QA ngẫu nhiên | ≥95% Gate 30; ≥98% Gate 60/90 |
+| Bàn giao (product) | Ca cần chuyển có ticket đủ ngữ cảnh, đúng người và được nhận trong 4 giờ làm việc / ca cần chuyển phát hiện qua log + QA | 100%; không có ca thì N/A, báo riêng bộ thử |
+| Giờ tiết kiệm ròng | (Tổng phút baseline của tác vụ tương đương − phút thực tế kể cả chuyển/làm lại − phút QA/bảo trì/hỗ trợ tăng thêm) / 60 | ≥120 giờ/tháng ở Gate 60/90; không cộng trùng chi phí đã tính trong tác vụ |
+
+Ví dụ **giả định**, không phải dữ liệu: nếu 8,5 → 3,0 phút là đúng, tiết kiệm gộp 5,5 phút/lượt; cần ít nhất **1.310 lượt/tháng** để đạt 120 giờ trước công sức bổ sung. Với 25 người và 20 ngày làm việc giả định, khoảng 2,62 lượt/người/ngày. Sau QA/bảo trì cần khối lượng lớn hơn; Gate 30 phải kiểm lưu lượng thật. Giờ tiết kiệm không đồng nghĩa tiền mặt/ROI; đánh giá tài chính cần chi phí và đơn giá được duyệt.
+
+### Gate 30–60–90
+
+| Gate | Owner chịu trách nhiệm | Bằng chứng và điều kiện chuyển | Khi không đạt |
+| :--- | :--- | :--- | :--- |
+| **0–30: chứng minh vấn đề/readiness** | Chủ quy trình Vận hành; Data Owner, QA, AI Tech Lead thực hiện | Case thực tế; phạm vi/nguồn; owner; quyền và hạn mức chi phí được duyệt; baseline ≥50 lượt thủ công tương đương; ≥100 câu thử gồm ≥20 ca cần chuyển; trích nguồn đúng ≥95%; bàn giao đúng 100% ca thử; không lỗi nghiêm trọng chưa xử lý | Sửa/đo tiếp, chưa mở pilot AI trong workflow. Thiếu mẫu phải kéo dài thu thập. |
+| **31–60: chứng minh chất lượng/hành vi/giá trị** | Chủ quy trình Vận hành; QA độc lập xác nhận | ≥50 tác vụ đủ theo dõi/tuần trong 2 tuần liên tiếp; QA ngẫu nhiên ≥50 câu/tuần hoặc toàn bộ nếu ít hơn; đủ một tháng tính giờ ròng. Đồng thời dùng ≥85%, hành vi ≥80%, thời gian ≤3,0 phút, trích nguồn ≥98%, bàn giao 100%, giờ ròng ≥120/tháng; không lỗi nghiêm trọng chưa xử lý | Thiếu mục tiêu/mẫu → sửa, đo lại. Không có ca bàn giao thật: ghi N/A và bộ thử đạt, chưa tuyên bố tỷ lệ thực tế. |
+| **61–90: quyết định mở rộng** | Chủ quy trình trình Ban Điều hành; Data Owner/QA/AI Tech Lead bàn giao | Duy trì mọi mục tiêu Gate 60 trong 4 tuần liên tiếp với cùng yêu cầu mẫu; đủ một tháng giờ ròng; chốt owner vận hành, hỗ trợ, quyền và ngân sách phạm vi mới | Đạt → đề xuất mở rộng từng đợt sau phê duyệt. Không đạt → giữ/sửa hoặc đề xuất dừng theo §4. Không tự tuyên bố normalization. |
+
+Owner là **vai trò cần đơn vị xác nhận**, không tự gán chức danh doanh nghiệp cho sinh viên. Điều phối bài nhóm: Trần Đình Hinh xác nhận case/owner/quyết định; Hoàng Quốc Dũng tổng hợp workflow, nguồn và gate; Đinh Xuân Quyền tổng hợp cách đo, dashboard và memo. Phân công này không thay thế bổ nhiệm owner vận hành.
+
+**Bước ngay tiếp theo:** nhóm trưởng bổ sung căn cứ tình huống và xác nhận phản biện; người phụ trách dashboard khóa nguồn đo với Chủ quy trình. Thiết kế và đối chiếu v1/v2 đã có, nhưng điều kiện tình huống thực tế và số liệu đã xác nhận còn chờ bằng chứng của nhóm.
